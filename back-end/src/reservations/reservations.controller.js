@@ -7,6 +7,11 @@ async function list(req, res) {
   });
 }
 
+async function makeReservation(req, res, next) {
+
+}
+
 module.exports = {
   list,
+  makeReservation,
 };
