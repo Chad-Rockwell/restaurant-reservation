@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import CreateReservation from "./CreateReservation";
 import NotFound from "./NotFound";
@@ -15,6 +15,9 @@ import { today } from "../utils/date-time";
  * @returns {JSX.Element}
  */
 function Routes() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const date = searchParams.get("date");
   return (
     <Switch>
       <Route exact={true} path="/">
@@ -27,7 +30,7 @@ function Routes() {
         <CreateReservation />
       </Route>
       <Route path="/dashboard">
-        <Dashboard date={today()} />
+        <Dashboard date={date || today()} />
       </Route>
       <Route>
         <NotFound />
