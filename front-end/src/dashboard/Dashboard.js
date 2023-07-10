@@ -45,7 +45,24 @@ function Dashboard({ date }) {
     <main>
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date {currentDate}</h4> {/* Update to use currentDate */}
+        <h4 className="mb-0">Reservations for date {currentDate}</h4>{" "}
+        {/* Update to use currentDate */}
+        <div>
+          {reservations.map((reservation) => {
+            const timeParts = reservation.reservation_time.split(":");
+            const hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+            const period = hours >= 12 ? "PM" : "AM";
+            const formattedHours = hours > 12 ? hours - 12 : hours;
+            const formattedMinutes = minutes.toString().padStart(2, "0");
+            const formattedTime = `${formattedHours}:${formattedMinutes} ${period}`;
+            return (
+              <p key={reservation.id}>
+                {reservation.first_name} {reservation.last_name} {formattedTime} Party size: {reservation.people}
+              </p>
+            );
+          })}
+        </div>
         <div className="ml-auto">
           <button className="btn btn-primary mr-2" onClick={handlePrevious}>
             Previous
@@ -59,7 +76,7 @@ function Dashboard({ date }) {
         </div>
       </div>
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
+      {/* {JSON.stringify(reservations)} */}
     </main>
   );
 }
