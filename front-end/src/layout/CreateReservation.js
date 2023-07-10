@@ -1,11 +1,12 @@
 import React from "react";
 import { makeReservation } from "../utils/api";
+import ErrorAlert from "../layout/ErrorAlert";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useEffect } from "react";
 
 function CreateReservation() {
-  const numbers = Array.from({ length: 20 }, (_, index) => index + 1);
+  // const numbers = Array.from({ length: 20 }, (_, index) => index + 1);
   const history = useHistory();
   const goBack = (event) => {
     event.preventDefault();
@@ -26,6 +27,8 @@ function CreateReservation() {
     people: null,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [reservationsError, setReservationsError] = useState(null);
+
   const submitHandler = (event) => {
     event.preventDefault();
     setReservationRequest({
@@ -41,8 +44,13 @@ function CreateReservation() {
   useEffect(() => {
     if(submitted) {
         console.log(reservationRequest);
-        makeReservation(reservationRequest);
-        history.push(`/dashboard?date=${reservationRequest.reservation_date}`);
+        makeReservation(reservationRequest)
+        .then((response) => {
+          history.push(`/dashboard?date=${reservationRequest.reservation_date}`);
+        })
+        .catch((error) => {
+          setReservationsError(error);
+        });
     }
 
   }, [reservationRequest]);
@@ -50,6 +58,7 @@ function CreateReservation() {
 
 
   return (
+    <div>
     <form onSubmit={(event) => submitHandler(event)}>
       <label htmlFor="first_name">First name</label>
       <input
@@ -93,6 +102,10 @@ function CreateReservation() {
       <button onClick={goBack}>Cancel</button>
       <button type="submit">Submit</button>
     </form>
+    {reservationsError && (
+        <ErrorAlert error={reservationsError} />
+      )}
+    </div>
   );
 }
 
