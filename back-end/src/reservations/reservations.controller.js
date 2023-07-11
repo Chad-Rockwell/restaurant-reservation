@@ -57,6 +57,12 @@ function validateSpecific(req, res, next) {
   const reservationDate = new Date(reservation_date);
   const reservationDay = reservationDate.getUTCDay();
   const currentDate = new Date();
+  const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
+  const reservationDateTime = new Date(
+    `${reservation_date}T${reservation_time}`
+  );
+  const reservationTime =
+    reservationDateTime.getHours() * 60 + reservationDateTime.getMinutes();
   if (isNaN(Date.parse(reservation_date))) {
     next({
       status: 400,
@@ -69,9 +75,21 @@ function validateSpecific(req, res, next) {
   }
 
   currentDate.setUTCHours(0, 0, 0, 0);
-  if (reservationDate < currentDate) {
+  const isPastDate = reservationDateTime < currentDate;
+  const isSameDateAndPastTime =
+    reservationDateTime.toISOString() < currentDate.toISOString() &&
+    reservationTime < currentTime;
+  if (isPastDate || isSameDateAndPastTime) {
     next({ status: 400, message: `Reservation date must be in the future` });
   }
+
+  if (reservationTime < 630 || reservationTime > 1350) {
+    next({
+      status: 400,
+      message: "Reservation time must be between 10:30 AM and 9:30 PM",
+    });
+  }
+
   if (!timeRegex.test(reservation_time)) {
     next({
       status: 400,
