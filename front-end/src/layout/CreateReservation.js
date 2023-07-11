@@ -31,19 +31,31 @@ function CreateReservation() {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    setReservationRequest({
-      first_name: event.target.first_name.value,
-      last_name: event.target.last_name.value,
-      mobile_number: event.target.mobile_number.value,
-      reservation_date: event.target.reservation_date.value,
-      reservation_time: event.target.reservation_time.value,
-      people: Number(event.target.people.value),
-    });
-    setSubmitted(true);
+    setReservationsError(null);
+    const validationErrors = [];
+
+    const reservationDate = new Date(reservationRequest.reservation_date);
+    const reservationDay = reservationDate.getUTCDay();
+    if (reservationDay === 2) {
+      validationErrors.push(new Error("Restaurant is closed on Tuesdays"));
+    }
+
+    const currentDate = new Date();
+    currentDate.setUTCHours(0, 0, 0, 0);
+    if (reservationDate < currentDate) {
+      validationErrors.push(new Error("Reservation date must be in the future"));
+    }
+
+    if (validationErrors.length > 0) {
+      setReservationsError(validationErrors);
+    } else if(validationErrors.length === 0) {
+      setSubmitted(true);
+    }
   };
   useEffect(() => {
     if(submitted) {
         console.log(reservationRequest);
+
         makeReservation(reservationRequest)
         .then((response) => {
           history.push(`/dashboard?date=${reservationRequest.reservation_date}`);
@@ -103,8 +115,13 @@ function CreateReservation() {
       <button type="submit">Submit</button>
     </form>
     {reservationsError && (
-        <ErrorAlert error={reservationsError} />
-      )}
+  <>
+    {reservationsError.map((error, index) => (
+      <ErrorAlert key={index} error={error} />
+    ))}
+  </>
+)}
+
     </div>
   );
 }

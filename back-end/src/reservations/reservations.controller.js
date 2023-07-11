@@ -54,16 +54,36 @@ function createValidatorFor(field) {
 function validateSpecific(req, res, next) {
   const { people, reservation_time, reservation_date } = req.body.data;
   const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+  const reservationDate = new Date(reservation_date);
+  const reservationDay = reservationDate.getUTCDay();
+  const currentDate = new Date();
   if (isNaN(Date.parse(reservation_date))) {
-    next({ status: 400, message: `Invalid reservation_date: ${reservation_date}` });
+    next({
+      status: 400,
+      message: `Invalid reservation_date: ${reservation_date}`,
+    });
+  }
+
+  if (reservationDay === 2) {
+    next({ status: 400, message: `Restaurant is closed on Tuesdays` });
+  }
+
+  currentDate.setUTCHours(0, 0, 0, 0);
+  if (reservationDate < currentDate) {
+    next({ status: 400, message: `Reservation date must be in the future` });
   }
   if (!timeRegex.test(reservation_time)) {
-    next({ status: 400, message: `Invalid reservation_time: ${reservation_time}` });
+    next({
+      status: 400,
+      message: `Invalid reservation_time: ${reservation_time}`,
+    });
   }
   if (typeof people !== "number") {
-    next({ status: 400, message: `Invalid, people must be a number: ${people}` });
-  }
-  else {
+    next({
+      status: 400,
+      message: `Invalid, people must be a number: ${people}`,
+    });
+  } else {
     next();
   }
 }
