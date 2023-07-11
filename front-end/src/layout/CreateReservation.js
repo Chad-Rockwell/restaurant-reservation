@@ -43,14 +43,14 @@ function CreateReservation() {
       reservation_time: event.target.reservation_time.value,
       people: Number(event.target.people.value),
     });
-      
+    setValidationErrors(reservationRequestValidation(reservationRequest));
       setSubmitted(true);
 
   };
   useEffect(() => {
     if(submitted) {
         console.log(reservationRequest);
-        setValidationErrors(reservationRequestValidation(reservationRequest));
+        
         if(validationErrors.length === 0) {
           makeReservation(reservationRequest)
           .then((response) => {
