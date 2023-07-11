@@ -57,7 +57,7 @@ function Dashboard({ date }) {
             const formattedMinutes = minutes.toString().padStart(2, "0");
             const formattedTime = `${formattedHours}:${formattedMinutes} ${period}`;
             return (
-              <p key={reservation.id}>
+              <p key={reservation.reservation_id}>
                 {reservation.first_name} {reservation.last_name} {formattedTime} Party size: {reservation.people}
               </p>
             );
