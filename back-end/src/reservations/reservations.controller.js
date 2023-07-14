@@ -6,10 +6,15 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
   const { date } = req.query;
-  const data = await service.list(date);
-  res.json({
-    data,
-  });
+  if (req.query.mobile_number) {
+    const data = await service.search(req.query.mobile_number);
+    res.json({ data });
+  } else {
+    const data = await service.list(date);
+    res.json({
+      data,
+    });
+  }
 }
 
 async function create(req, res, next) {
