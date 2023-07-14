@@ -1,10 +1,10 @@
 import React from "react";
-import { makeReservation } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
+import { makeReservation } from "../../utils/api";
+import ErrorAlert from "../../layout/ErrorAlert";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
-import { reservationRequestValidation } from "../validations/reservationValidation";
+import { reservationRequestValidation } from "../../validations/reservationValidation";
 
 function CreateReservation() {
   // const numbers = Array.from({ length: 20 }, (_, index) => index + 1);

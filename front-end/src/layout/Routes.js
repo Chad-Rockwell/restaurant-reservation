@@ -1,8 +1,10 @@
 import React from "react";
 
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
-import Dashboard from "../dashboard/Dashboard";
-import CreateReservation from "./CreateReservation";
+import Dashboard from "../components/dashboard/Dashboard";
+import CreateReservation from "../components/reservations/CreateReservation";
+import SeatReservation from "../components/reservations/SeatReservation";
+import CreateTable from "../components/tables/CreateTable";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 
@@ -28,6 +30,12 @@ function Routes() {
       </Route>
       <Route exact={true} path="/reservations/new">
         <CreateReservation />
+      </Route>
+      <Route path="/reservations/:reservation_id/seat">
+        <SeatReservation />
+      </Route>
+      <Route path="/tables/new">
+        <CreateTable />
       </Route>
       <Route path="/dashboard">
         <Dashboard date={date || today()} />

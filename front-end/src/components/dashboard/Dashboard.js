@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
+import { listReservations, listTables } from "../../utils/api";
+import ErrorAlert from "../../layout/ErrorAlert";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 /**
  * Defines the dashboard page.
@@ -10,7 +11,9 @@ import ErrorAlert from "../layout/ErrorAlert";
  */
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
+  const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  // const [tablesError, setTablesError] = useState(null);
   const [currentDate, setCurrentDate] = useState(date); // Add currentDate state
 
   useEffect(loadDashboard, [currentDate]); // Use currentDate in useEffect
@@ -21,6 +24,9 @@ function Dashboard({ date }) {
     listReservations({ date: currentDate }, abortController.signal) // Use currentDate for fetching reservations
       .then(setReservations)
       .catch(setReservationsError);
+    listTables(abortController.signal)
+      .then(setTables)
+      // .catch(setTablesError);
     return () => abortController.abort();
   }
 
@@ -46,9 +52,9 @@ function Dashboard({ date }) {
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for date {currentDate}</h4>{" "}
-        {/* Update to use currentDate */}
         <div>
           {reservations.map((reservation) => {
+            const { reservation_id } = reservation;
             const timeParts = reservation.reservation_time.split(":");
             const hours = parseInt(timeParts[0], 10);
             const minutes = parseInt(timeParts[1], 10);
@@ -57,9 +63,12 @@ function Dashboard({ date }) {
             const formattedMinutes = minutes.toString().padStart(2, "0");
             const formattedTime = `${formattedHours}:${formattedMinutes} ${period}`;
             return (
-              <p key={reservation.reservation_id}>
-                {reservation.first_name} {reservation.last_name} {formattedTime} Party size: {reservation.people}
-              </p>
+              <div key={reservation_id}>
+                <p>
+                  {reservation.first_name} {reservation.last_name} {formattedTime} Party size: {reservation.people}
+                </p>
+                <Link to={`/reservations/${reservation_id}/seat`}>Seat</Link>
+              </div>
             );
           })}
         </div>
@@ -75,6 +84,31 @@ function Dashboard({ date }) {
           </button>
         </div>
       </div>
+      <div>
+        <h4>Tables</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Table Name</th>
+              <th>Capacity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tables.map((table) => {
+              const status = table.reservation_id ? "Occupied" : "Free";
+              return (
+                <tr key={table.table_id}>
+                  <td>{table.table_name}</td>
+                  <td>{table.capacity}</td>
+                  <td data-table-id-status={table.table_id}>{status}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+  
       <ErrorAlert error={reservationsError} />
       {/* {JSON.stringify(reservations)} */}
     </main>
