@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables } from "../../utils/api";
+import { listReservations, listTables, finishTable } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -13,7 +13,7 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  // const [tablesError, setTablesError] = useState(null);
+  const [tablesError, setTablesError] = useState(null);
   const [currentDate, setCurrentDate] = useState(date); // Add currentDate state
 
   useEffect(loadDashboard, [currentDate]); // Use currentDate in useEffect
@@ -24,11 +24,24 @@ function Dashboard({ date }) {
     listReservations({ date: currentDate }, abortController.signal) // Use currentDate for fetching reservations
       .then(setReservations)
       .catch(setReservationsError);
-    listTables(abortController.signal)
-      .then(setTables)
-      // .catch(setTablesError);
+    listTables(abortController.signal).then(setTables).catch(setTablesError);
     return () => abortController.abort();
   }
+
+  const handleFinish = async (table_id) => {
+    try {
+      if (
+        window.confirm(
+          "Is this table ready to seat new guests? This cannot be undone."
+        )
+      ) {
+        await finishTable(table_id);
+        loadDashboard();
+      }
+    } catch (error) {
+      setTablesError(error);
+    }
+  };
 
   function handlePrevious() {
     const previousDate = new Date(currentDate);
@@ -65,7 +78,8 @@ function Dashboard({ date }) {
             return (
               <div key={reservation_id}>
                 <p>
-                  {reservation.first_name} {reservation.last_name} {formattedTime} Party size: {reservation.people}
+                  {reservation.first_name} {reservation.last_name}{" "}
+                  {formattedTime} Party size: {reservation.people}
                 </p>
                 <Link to={`/reservations/${reservation_id}/seat`}>Seat</Link>
               </div>
@@ -92,6 +106,7 @@ function Dashboard({ date }) {
               <th>Table Name</th>
               <th>Capacity</th>
               <th>Status</th>
+              <th>Actions</th> {/* Add a new table header for Actions */}
             </tr>
           </thead>
           <tbody>
@@ -102,14 +117,28 @@ function Dashboard({ date }) {
                   <td>{table.table_name}</td>
                   <td>{table.capacity}</td>
                   <td data-table-id-status={table.table_id}>{status}</td>
+                  <td>
+                    {table.reservation_id /* Only show the Finish button if the table is occupied */ && (
+                      <button
+                        className="btn btn-danger"
+                        data-table-id-finish={
+                          table.table_id
+                        } /* Add the data-table-id-finish attribute */
+                        onClick={() => handleFinish(table.table_id)}
+                      >
+                        Finish
+                      </button>
+                    )}
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-  
+
       <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={tablesError} />
       {/* {JSON.stringify(reservations)} */}
     </main>
   );
