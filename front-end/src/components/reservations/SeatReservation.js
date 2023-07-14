@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { readReservation, listTables, seatReservation } from "../../utils/api";
+import { readReservation, listTables, seatReservation, changeReservationStatus } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
 
 export default function SeatReservation() {
@@ -54,6 +54,7 @@ export default function SeatReservation() {
     
     try {
       await seatReservation(reservation_id, tableId, ac.signal);
+      await changeReservationStatus(currentReservation, "seated");
       history.push(`/dashboard`); // Navigate to the dashboard after successful submission
     } catch (error) {
       console.log(error);

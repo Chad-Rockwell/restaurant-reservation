@@ -14,6 +14,9 @@ async function list(req, res) {
 
 async function create(req, res, next) {
   const data = await service.create(req.body.data);
+  if (data.status !== "booked") {
+    next({ status: 400, message: `status cannot be ${data.status}` });
+  }
   res.status(201).json({ data });
 }
 
@@ -25,14 +28,24 @@ async function read(req, res, next) {
       message: `reservation_id is required`,
     });
   } else {
-    data = await service.read(reservation_id);
+    const data = await service.read(reservation_id);
     if (data) {
       res.status(200).json({ data });
-    }
-    else {
-      next({status: 404, message: 'no reservation found with that id'});
+    } else {
+      next({ status: 404, message: "no reservation found with that id" });
     }
   }
+}
+
+async function updateStatus(req, res, next) {
+  const reservation = res.locals.reservation;
+  const { status } = req.body.data;
+  const updatedReservation = {
+    ...reservation,
+    status,
+  };
+  const data = await service.updateStatus(updatedReservation);
+  res.json({ data });
 }
 
 //helper functions
@@ -124,6 +137,35 @@ function validateSpecific(req, res, next) {
   }
 }
 
+async function validateStatus(req, res, next) {
+  const { status } = req.body.data;
+  const { reservation_id } = req.params; // Extract reservation_id from req.params
+  const foundReservation = await service.read(reservation_id);
+  if (foundReservation) {
+    res.locals.reservation = foundReservation;
+    if (foundReservation.status === "finished") {
+      next({
+        status: 400,
+        message: "A finished reservation cannot be updated",
+      });
+    }
+    const validStatusList = ["booked", "seated", "finished", "cancelled"];
+    if (validStatusList.includes(status)) {
+      next();
+    } else {
+      next({
+        status: 400,
+        message: `unknown status: ${status}`,
+      });
+    }
+  } else {
+    next({
+      status: 404,
+      message: `No reservation found with reservation_id: ${reservation_id}`,
+    });
+  }
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   read: asyncErrorBoundary(read),
@@ -132,5 +174,10 @@ module.exports = {
     ...fields.map(createValidatorFor),
     validateSpecific,
     asyncErrorBoundary(create),
+  ],
+  updateStatus: [
+    validateDataExists,
+    asyncErrorBoundary(validateStatus),
+    asyncErrorBoundary(updateStatus),
   ],
 };

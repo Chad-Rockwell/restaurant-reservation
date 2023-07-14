@@ -16,7 +16,17 @@ function create(tableData) {
 }
 
 function update(table_id, reservation_id) {
-  return knex("tables").where("table_id", table_id).update({reservation_id});
+  return knex.transaction(async (trx) => {
+    await trx("reservations")
+      .where("reservation_id", reservation_id)
+      .update({ status: "seated" });
+
+    return await knex("tables")
+      .select("*")
+      .where( "table_id", table_id )
+      .update({reservation_id})
+      .then((updatedRecords) => updatedRecords[0]);
+  });
 }
 
 function finish(table_id, reservation_id) {

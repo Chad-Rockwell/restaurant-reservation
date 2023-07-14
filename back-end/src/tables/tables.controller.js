@@ -15,9 +15,12 @@ async function create(req, res, next) {
   res.status(201).json({ data });
 }
 
-async function update(req, res) {
-  const { reservation_id } = res.locals.reservation;
+async function update(req, res, next) {
+  const { reservation_id, status } = res.locals.reservation;
   const { table_id } = req.params;
+  if(status === "seated") {
+    next({status: 400, message: "reservation is already seated"});
+  }
   const data = await service.update(table_id, reservation_id);
   res.status(200).json({ data });
 }
