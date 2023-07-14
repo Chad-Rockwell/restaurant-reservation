@@ -117,7 +117,7 @@ export default function SearchPage() {
             </tbody>
           </table>
           ) : (
-            <h4>No Reservations Found</h4>
+            <h4>No reservations found</h4>
           )}
         </div>
       ) : null}
