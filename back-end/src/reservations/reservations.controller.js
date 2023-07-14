@@ -17,6 +17,24 @@ async function create(req, res, next) {
   res.status(201).json({ data });
 }
 
+async function read(req, res, next) {
+  const { reservation_id } = req.params;
+  if (!reservation_id) {
+    next({
+      status: 404,
+      message: `reservation_id is required`,
+    });
+  } else {
+    data = await service.read(reservation_id);
+    if (data) {
+      res.status(200).json({ data });
+    }
+    else {
+      next({status: 404, message: 'no reservation found with that id'});
+    }
+  }
+}
+
 //helper functions
 let fields = [
   "first_name",
@@ -108,6 +126,7 @@ function validateSpecific(req, res, next) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
+  read: asyncErrorBoundary(read),
   create: [
     validateDataExists,
     ...fields.map(createValidatorFor),
