@@ -66,25 +66,58 @@ function Dashboard({ date }) {
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for date {currentDate}</h4>{" "}
         <div>
-          {reservations.map((reservation) => {
-            const { reservation_id } = reservation;
-            const timeParts = reservation.reservation_time.split(":");
-            const hours = parseInt(timeParts[0], 10);
-            const minutes = parseInt(timeParts[1], 10);
-            const period = hours >= 12 ? "PM" : "AM";
-            const formattedHours = hours > 12 ? hours - 12 : hours;
-            const formattedMinutes = minutes.toString().padStart(2, "0");
-            const formattedTime = `${formattedHours}:${formattedMinutes} ${period}`;
-            return (
-              <div key={reservation_id}>
-                <p>
-                  {reservation.first_name} {reservation.last_name}{" "}
-                  {formattedTime} Party size: {reservation.people}
-                </p>
-                <Link to={`/reservations/${reservation_id}/seat`}>Seat</Link>
-              </div>
-            );
-          })}
+          <table>
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Time</th>
+                <th>Party Size</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reservations.map((reservation) => {
+                const {
+                  reservation_id,
+                  first_name,
+                  last_name,
+                  reservation_time,
+                  people,
+                  status,
+                } = reservation;
+                const timeParts = reservation_time.split(":");
+                const hours = parseInt(timeParts[0], 10);
+                const minutes = parseInt(timeParts[1], 10);
+                const period = hours >= 12 ? "PM" : "AM";
+                const formattedHours = hours > 12 ? hours - 12 : hours;
+                const formattedMinutes = minutes.toString().padStart(2, "0");
+                const formattedTime = `${formattedHours}:${formattedMinutes} ${period}`;
+
+                if (reservation.status !== "finished") {
+                  return (
+                    <tr key={reservation_id}>
+                      <td>{first_name}</td>
+                      <td>{last_name}</td>
+                      <td>{formattedTime}</td>
+                      <td>{people}</td>
+                      <td data-reservation-id-status={reservation_id}>
+                        {status}
+                      </td>
+                      <td>
+                        {status === "booked" && (
+                          <Link to={`/reservations/${reservation_id}/seat`}>
+                            Seat
+                          </Link>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                }
+              })}
+            </tbody>
+          </table>
         </div>
         <div className="ml-auto">
           <button className="btn btn-primary mr-2" onClick={handlePrevious}>
