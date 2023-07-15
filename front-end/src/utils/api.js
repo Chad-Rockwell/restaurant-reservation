@@ -113,6 +113,16 @@ export async function changeReservationStatus(reservation, status) {
   return await fetchJson(url, options, reservation);
 }
 
+export async function editReservation(reservation, reservation_id) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  const options = {
+    method: "PUT",
+    body: JSON.stringify({ data: reservation }),
+    headers,
+  };
+  return await fetchJson(url, options, reservation);
+}
+
 /**
  * Retrieves all existing reservation.
  * @returns {Promise<[reservation]>}

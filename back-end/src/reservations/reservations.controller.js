@@ -42,6 +42,31 @@ async function read(req, res, next) {
   }
 }
 
+async function update(req, res, next) {
+  const { reservation_id } = req.params;
+  const updatedReservation = {
+    ...req.body.data,
+    reservation_id: reservation_id,
+  };
+  const data = await service.read(reservation_id);
+  if (!data) {
+    next({
+      status: 404,
+      message: `no request found with request_id: ${reservation_id}`,
+    });
+  } else {
+    if (data.status === "booked") {
+      const updated = await service.update(updatedReservation);
+      res.json({ data: updated });
+    } else {
+      next({
+        status: 400,
+        message: "You can only update reservations with a booked status.",
+      });
+    }
+  }
+}
+
 async function updateStatus(req, res, next) {
   const reservation = res.locals.reservation;
   const { status } = req.body.data;
@@ -171,6 +196,20 @@ async function validateStatus(req, res, next) {
   }
 }
 
+function validateTime(req, res, next) {
+  const { reservation_time } = req.body.data;
+  const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+  if (!timeRegex.test(reservation_time)) {
+    next({
+      status: 400,
+      message: "Invalid reservation_time format.",
+    });
+  }
+
+  next();
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   read: asyncErrorBoundary(read),
@@ -184,5 +223,12 @@ module.exports = {
     validateDataExists,
     asyncErrorBoundary(validateStatus),
     asyncErrorBoundary(updateStatus),
+  ],
+  update: [
+    validateDataExists,
+    ...fields.map(createValidatorFor),
+    validateTime,
+    validateSpecific,
+    asyncErrorBoundary(update),
   ],
 };

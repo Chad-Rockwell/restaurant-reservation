@@ -14,15 +14,15 @@ export default function CreateTable() {
 
   const [tableData, setTableData] = useState({ ...initialTableData });
 
-  const handleErrorClose = (event) => {
-    const errorMessage = event.target.parentNode.parentNode.childNodes[0].innerHTML;
-    delete tableErrors[`${errorMessage}`];
-    setTableErrors({ ...tableErrors });
-  };
+  // const handleErrorClose = (event) => {
+  //   const errorMessage = event.target.parentNode.parentNode.childNodes[0].innerHTML;
+  //   delete tableErrors[`${errorMessage}`];
+  //   setTableErrors({ ...tableErrors });
+  // };
 
-  const errorMap = Object.keys(tableErrors).map((error, index) => (
-    <ErrorAlert key={`error-${error}`} error={error} handleErrorClose={handleErrorClose} />
-  ));
+  // const errorMap = Object.keys(tableErrors).map((error, index) => (
+  //   <ErrorAlert key={`error-${error}`} error={error} handleErrorClose={handleErrorClose} />
+  // ));
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -90,6 +90,9 @@ export default function CreateTable() {
           </button>
         </div>
       </form>
+      {tableErrors.length && (
+        <ErrorAlert error={tableErrors}/>
+      )}
     </div>
   );
 }

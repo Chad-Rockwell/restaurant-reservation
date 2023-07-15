@@ -6,6 +6,7 @@ import CreateReservation from "../components/reservations/CreateReservation";
 import SeatReservation from "../components/reservations/SeatReservation";
 import CreateTable from "../components/tables/CreateTable";
 import Search from "../components/search/Search"
+import EditReservation from "../components/reservations/EditReservation"
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 
@@ -34,6 +35,9 @@ function Routes() {
       </Route>
       <Route path="/reservations/:reservation_id/seat">
         <SeatReservation />
+      </Route>
+      <Route path="/reservations/:reservation_id/edit">
+        <EditReservation />
       </Route>
       <Route path="/tables/new">
         <CreateTable />

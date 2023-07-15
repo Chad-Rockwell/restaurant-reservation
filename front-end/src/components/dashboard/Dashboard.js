@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables, finishTable } from "../../utils/api";
+import { listReservations, listTables, finishTable, changeReservationStatus } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -41,7 +41,22 @@ function Dashboard({ date }) {
     } catch (error) {
       setTablesError(error);
     }
-  };
+  }
+  
+  const handleCancel = async (reservation) => {
+    try {
+      if (
+        window.confirm(
+          "Do you want to cancel this reservation? This cannot be undone."
+        )
+      ) {
+        await changeReservationStatus(reservation, "cancelled");
+        loadDashboard();
+      }
+    } catch (error) {
+      setReservationsError(error);
+    }
+  }
 
   function handlePrevious() {
     const previousDate = new Date(currentDate);
@@ -111,6 +126,12 @@ function Dashboard({ date }) {
                             Seat
                           </Link>
                         )}
+                      </td>
+                      <td>
+                        <Link to={`/reservations/${reservation_id}/edit`}>Edit</Link>
+                      </td>
+                      <td>
+                        <button data-reservation-id-cancel={reservation.reservation_id} onClick={() => handleCancel(reservation)}>Cancel</button>
                       </td>
                     </tr>
                   );
