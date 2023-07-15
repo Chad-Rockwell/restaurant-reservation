@@ -77,10 +77,11 @@ export default function EditReservation() {
   }
 
   return (
-    <div>
+    <div className="container mt-4 pt-4">
       <form onSubmit={(event) => handleSubmit(event)}>
-        <label htmlFor="first_name">First name</label>
+        <label className="form-label" htmlFor="first_name">First name</label>
         <input
+          className="form-control"
           type="text"
           id="first_name"
           name="first_name"
@@ -89,8 +90,9 @@ export default function EditReservation() {
           required
           value={reservationRequest.first_name}
         />
-        <label htmlFor="last_name">Last name</label>
+        <label className="form-label" htmlFor="last_name">Last name</label>
         <input
+          className="form-control"
           type="text"
           id="last_name"
           name="last_name"
@@ -99,8 +101,9 @@ export default function EditReservation() {
           required
           value={reservationRequest.last_name}
         />
-        <label htmlFor="mobile_number">Mobile number</label>
+        <label className="form-label" htmlFor="mobile_number">Mobile number</label>
         <input
+          className="form-control"
           type="text"
           id="mobile_number"
           name="mobile_number"
@@ -109,8 +112,9 @@ export default function EditReservation() {
           required
           value={reservationRequest.mobile_number}
         />
-        <label htmlFor="reservation_date">Date of reservation</label>
+        <label className="form-label" htmlFor="reservation_date">Date of reservation</label>
         <input
+          className="form-control"
           type="date"
           id="reservation_date"
           name="reservation_date"
@@ -118,8 +122,9 @@ export default function EditReservation() {
           required
           value={reservationRequest.reservation_date}
         />
-        <label htmlFor="reservation_time">Time of reservation</label>
+        <label className="form-label" htmlFor="reservation_time">Time of reservation</label>
         <input
+          className="form-control"
           type="time"
           id="reservation_time"
           name="reservation_time"
@@ -127,8 +132,9 @@ export default function EditReservation() {
           required
           value={reservationRequest.reservation_time}
         />
-        <label htmlFor="people">Party size:</label>
+        <label className="form-label" htmlFor="people">Party size:</label>
         <input
+          className="form-control"
           id="people"
           name="people"
           placeholder="Number of people in party"
@@ -136,8 +142,8 @@ export default function EditReservation() {
           required
           value={reservationRequest.people}
         />
-        <button onClick={goBack}>Cancel</button>
-        <button type="submit">Submit</button>
+        <button className="btn btn-outline-dark mr-2 mt-2" onClick={goBack}>Cancel</button>
+        <button className="btn btn-outline-dark mt-2" type="submit">Submit</button>
       </form>
       {apiError && <ErrorAlert error={apiError} />}
       {validationErrors.length > 0 &&

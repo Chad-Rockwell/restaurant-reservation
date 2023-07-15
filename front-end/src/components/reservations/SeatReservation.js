@@ -66,69 +66,71 @@ export default function SeatReservation() {
 
   if (Object.keys(currentReservation).length && availableTables.length) {
     return (
-      <div>
+      <div className="container mt-5 p-5">
         {/* Seat Reservation Title */}
-        <div className="seat seat-title row ml-1 mt-1">
-          <h1>Seat Reservation</h1>
+        <div className="d-flex justify-content-center p-4">
+          <h1 className="header">Seat Reservation</h1>
         </div>
         
-        {/* Reservation Information */}
-        <div className="seat seat-information row ml-1 mb-3">
-          <h3>
-            #{currentReservation.reservation_id} -{" "}
-            {currentReservation.first_name} {currentReservation.last_name} on{" "}
-            {currentReservation.reservation_date.split("T")[0]} at{" "}
-            {currentReservation.reservation_time} for{" "}
-            {currentReservation.people}
-          </h3>
-        </div>
-        
-        {/* Seating Errors */}
-        <ErrorAlert error={seatingErrors} />
-        
-        {/* Seat Selection Form */}
-        <div className="seat seat-form form-group row ml-1 mb-3">
-          <label htmlFor="table_id">Seat at:</label>
-          <select
-            name="table_id"
-            id="table_id"
-            className="form-control"
-            onChange={handleSelectChange}
-            value={tableId}
-          >
-            <option value="">Select A Table</option>
-            {availableTables.map((table) => (
-              <option key={table.table_id} value={table.table_id}>
-                {table.table_name} - {table.capacity}
-              </option>
-            ))}
-          </select>
-        </div>
-        
-        {/* Seat Options */}
-        <div className="seat seat-options row ml-1">
-          <div>
-            <button
-              type="button"
-              className="btn btn-secondary mr-2"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
+        <div className="container">
+          {/* Reservation Information */}
+          <div className="container">
+            <h3 className="text-center">
+              #{currentReservation.reservation_id} -{" "}
+              {currentReservation.first_name} {currentReservation.last_name} on{" "}
+              {currentReservation.reservation_date.split("T")[0]} at{" "}
+              {currentReservation.reservation_time} for{" "}
+              {currentReservation.people}
+            </h3>
           </div>
-          <div>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={handleSubmit}
+          
+          {/* Seating Errors */}
+          <ErrorAlert error={seatingErrors} />
+          
+          {/* Seat Selection Form */}
+          <div className="container p-5">
+            <label  className="font-weight-bold" htmlFor="table_id">Seat at:</label>
+            <select
+              name="table_id"
+              id="table_id"
+              className="form-control"
+              onChange={handleSelectChange}
+              value={tableId}
             >
-              Submit
-            </button>
+              <option value="">Select A Table</option>
+              {availableTables.map((table) => (
+                <option key={table.table_id} value={table.table_id}>
+                  {table.table_name} - {table.capacity}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Seat Options */}
+          <div className="d-flex justify-content-center">
+            <div>
+              <button
+                type="button"
+                className="btn btn-secondary mr-2"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            </div>
+            <div>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </div>
     );
   } else {
-    return <h2>{reservationError}</h2>;
+    return <h2 className="text-center">{reservationError}</h2>;
   }
 }
