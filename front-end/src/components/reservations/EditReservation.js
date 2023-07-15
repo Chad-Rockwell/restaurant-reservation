@@ -7,7 +7,6 @@ import ReservationForm from "./ReservationForm";
 import { reservationRequestValidation } from "../../validations/reservationValidation";
 
 export default function EditReservation() {
-  const [currentReservation, setCurrentReservation] = useState(null);
   const [apiError, setApiError] = useState(null);
   const [validationErrors, setValidationErrors] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
@@ -57,7 +56,7 @@ export default function EditReservation() {
 
     readReservation(reservation_id, abortController.signal)
       .then((reservation) => {
-        setCurrentReservation(reservation);
+        
         setReservationRequest({
           first_name: reservation.first_name || "",
           last_name: reservation.last_name || "",

@@ -67,7 +67,7 @@ function CreateReservation() {
 
       setSubmitted(false);
     }
-  }, [reservationRequest]);
+  }, [reservationRequest, submitted, validationErrors.length, history]);
 
   return (
     <div className="container mt-4 p-4">

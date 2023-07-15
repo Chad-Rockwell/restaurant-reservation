@@ -186,6 +186,9 @@ function Dashboard({ date }) {
                               </tr>
                             );
                           }
+                          else{
+                            return null;
+                          }
                         })}
                       </tbody>
                     </table>
