@@ -37,7 +37,7 @@ async function read(req, res, next) {
     if (data) {
       res.status(200).json({ data });
     } else {
-      next({ status: 404, message: "no reservation found with that id" });
+      next({ status: 404, message: `no reservation found with that id: ${reservation_id}`});
     }
   }
 }
@@ -216,6 +216,7 @@ module.exports = {
   create: [
     validateDataExists,
     ...fields.map(createValidatorFor),
+    validateTime,
     validateSpecific,
     asyncErrorBoundary(create),
   ],
