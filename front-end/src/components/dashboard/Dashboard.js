@@ -5,6 +5,7 @@ import {
   finishTable,
   changeReservationStatus,
 } from "../../utils/api";
+import useQuery from "../../utils/useQuery";
 import ErrorAlert from "../../layout/ErrorAlert";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -18,8 +19,10 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const query = useQuery();
+  const dateQuery = query.get("date");
   const [tablesError, setTablesError] = useState(null);
-  const [currentDate, setCurrentDate] = useState(date); // Add currentDate state
+  const [currentDate, setCurrentDate] = useState(dateQuery ? dateQuery : date); // Add currentDate state
 
   useEffect(loadDashboard, [currentDate]); // Use currentDate in useEffect to load dashboard every time the date changes
 
