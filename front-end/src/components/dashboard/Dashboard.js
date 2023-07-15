@@ -36,7 +36,7 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
-  const handleFinish = async (table_id) => {
+  const handleFinish = async (table_id) =>{
     try {
       if (
         window.confirm(
@@ -51,7 +51,7 @@ function Dashboard({ date }) {
     }
   };
 
-  const handleCancel = async (reservation) => {
+  const handleCancel = async (reservation) =>{
     try {
       if (
         window.confirm(
@@ -117,12 +117,12 @@ function Dashboard({ date }) {
                           <th scope="col" className="text-nowrap">
                             Actions
                           </th>
-                          <th scope="col" className="text-nowrap"></th>{" "}
+                          <th scope="col" className="text-nowrap"></th>
                           {/* Add an empty table header */}
                         </tr>
                       </thead>
                       <tbody>
-                        {reservations.map((reservation) => {
+                        {reservations.map((reservation) =>{
                           const {
                             reservation_id,
                             first_name,
@@ -233,7 +233,7 @@ function Dashboard({ date }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {tables.map((table) => {
+                      {tables.map((table) =>{
                         const status = table.reservation_id
                           ? "Occupied"
                           : "Free";
