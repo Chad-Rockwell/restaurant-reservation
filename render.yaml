@@ -1,23 +1,18 @@
+version: 1
 services:
   - name: backend
     buildCommand: npm --prefix ./back-end run start
     env:
-      - key: DATABASE_URL
-        value: postgres://urweijsp:cmaJPepnXfkW1TgzDU8ls8fSod1C8aDd@mahmud.db.elephantsql.com/urweijsp
-      - key: DATABASE_URL_DEVELOPMENT
-        value: postgres://suaexdwu:9cPgMYRV09ypXx4fdaQzSQYQVfvi62d0@mahmud.db.elephantsql.com/suaexdwu
-      - key: DATABASE_URL_TEST
-        value: postgres://lefbzunn:zsVMhN9G22qYfLVjORZLq5SKtVrlCB_r@mahmud.db.elephantsql.com/lefbzunn
-      - key: DATABASE_URL_PREVIEW
-        value: postgres://mdtipaqm:WDYOLFRX4WFClbLfsdmP7KSsSQkjc7aS@mahmud.db.elephantsql.com/mdtipaqm
-      - key: LOG_LEVEL
-        value: info
+      DATABASE_URL: postgres://urweijsp:cmaJPepnXfkW1TgzDU8ls8fSod1C8aDd@mahmud.db.elephantsql.com/urweijsp
+      DATABASE_URL_DEVELOPMENT: postgres://suaexdwu:9cPgMYRV09ypXx4fdaQzSQYQVfvi62d0@mahmud.db.elephantsql.com/suaexdwu
+      DATABASE_URL_TEST: postgres://lefbzunn:zsVMhN9G22qYfLVjORZLq5SKtVrlCB_r@mahmud.db.elephantsql.com/lefbzunn
+      DATABASE_URL_PREVIEW: postgres://mdtipaqm:WDYOLFRX4WFClbLfsdmP7KSsSQkjc7aS@mahmud.db.elephantsql.com/mdtipaqm
+      LOG_LEVEL: info
 
   - name: frontend
     buildCommand: npm --prefix ./front-end run build
     env:
-      - key: REACT_APP_API_BASE_URL
-        value: http://localhost:5001
+      REACT_APP_API_BASE_URL: http://localhost:5001
 
 routes:
   - path: /api
