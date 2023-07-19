@@ -109,6 +109,9 @@ function Dashboard({ date }) {
                             Time
                           </th>
                           <th scope="col" className="text-nowrap">
+                            Phone #
+                          </th>
+                          <th scope="col" className="text-nowrap">
                             Party Size
                           </th>
                           <th scope="col" className="text-nowrap">
@@ -128,6 +131,7 @@ function Dashboard({ date }) {
                             first_name,
                             last_name,
                             reservation_time,
+                            mobile_number,
                             people,
                             status,
                           } = reservation;
@@ -150,6 +154,7 @@ function Dashboard({ date }) {
                                 <td>{first_name}</td>
                                 <td>{last_name}</td>
                                 <td>{formattedTime}</td>
+                                <td>{mobile_number}</td>
                                 <td>{people}</td>
                                 <td data-reservation-id-status={reservation_id}>
                                   {status}
